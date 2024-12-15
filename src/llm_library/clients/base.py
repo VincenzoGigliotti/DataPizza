@@ -1,6 +1,14 @@
 import abc
 import logging
 from typing import Any, Dict
+from pydantic import BaseModel, Field
+
+class PromptInput(BaseModel):
+    prompt: str = Field(..., description="Richiesta")
+    context: str = Field(..., description="Contesto obbligatorio")
+
+class ResponseOutput(BaseModel):
+    response: str = Field(..., description="Risposta")
 
 class LLMClient(abc.ABC):
 
@@ -18,5 +26,5 @@ class LLMClient(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def respond(self, prompt: str) -> str:
+    def respond(self, prompt_input: PromptInput) -> ResponseOutput:
         pass

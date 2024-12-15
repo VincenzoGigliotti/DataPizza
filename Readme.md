@@ -1,6 +1,6 @@
 # my-llm-lib
 
-**Versione:** 0.1.0
+**Versione:** 0.2.0
 
 ## Requisiti
 

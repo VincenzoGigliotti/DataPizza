@@ -1,5 +1,5 @@
 import pytest
-from my_llm_lib.clients.base import LLMClient
+from my_llm_lib.clients.base import LLMClient, PromptInput
 
 class DummyClient(LLMClient):
     def load(self):
@@ -8,10 +8,10 @@ class DummyClient(LLMClient):
     def configure(self, new_config):
         self.config.update(new_config)
     
-    def respond(self, prompt: str) -> str:
+    def respond(self, prompt_input: PromptInput):
         if not self.loaded:
             raise RuntimeError("Modello non caricato")
-        return "Dummy response"
+        return {"response": f"Dummy response to {prompt_input.prompt} in {prompt_input.context}"}
 
 def test_base_client():
     c = DummyClient(config={"param": 1})
@@ -20,5 +20,6 @@ def test_base_client():
     assert c.loaded is True
     c.configure({"param": 2})
     assert c.config["param"] == 2
-    response = c.respond("Hello")
-    assert response == "Dummy response"
+    input_data = PromptInput(prompt="Hello", context="General context")
+    response = c.respond(input_data)
+    assert "Dummy response to Hello" in response["response"]

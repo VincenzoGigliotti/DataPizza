@@ -1,12 +1,12 @@
-from .base import LLMClient
+from .base import LLMClient, PromptInput, ResponseOutput
 from typing import Dict, Any
 import time
 import logging
 
 class OpenAIMockClient(LLMClient):
-
     def load(self):
         self.logger.info("OpenAIMockClient: Caricamento...")
+        time.sleep(0.1)
         self.loaded = True
         self.logger.info("OpenAIMockClient: Caricato.")
 
@@ -14,9 +14,11 @@ class OpenAIMockClient(LLMClient):
         self.logger.debug(f"OpenAIMockClient: Aggiornamento configurazione: {new_config}")
         self.config.update(new_config)
 
-    def respond(self, prompt: str) -> str:
+    def respond(self, prompt_input: PromptInput) -> ResponseOutput:
         if not self.loaded:
-            self.logger.error("OpenAIMockClient: Modello non caricato, impossibile rispondere.")
+            self.logger.error("OpenAIMockClient: Modello non caricato.")
             raise RuntimeError("Modello non caricato")
-        self.logger.info(f"OpenAIMockClient: Generazione risposta per prompt: {prompt}")
-        return f"OpenAI mock response to: {prompt}"
+
+        self.logger.info(f"OpenAIMockClient: {prompt_input.prompt}")
+        response_text = f"OpenAI mock response to: {prompt_input.prompt} with context {prompt_input.context}"
+        return ResponseOutput(response=response_text)
